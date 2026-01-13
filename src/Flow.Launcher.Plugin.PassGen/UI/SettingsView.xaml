@@ -75,7 +75,7 @@
 
         <TextBlock Grid.Row="0"
                    Text="Changes are saved automatically."
-                   Margin="0,0,0,8"
+                   Margin="18,0,0,8"
                    Foreground="#888"/>
 
         <Grid x:Name="LayoutGrid" Grid.Row="1" ClipToBounds="True">
@@ -95,7 +95,7 @@
                     <GroupBox.Template>
                         <ControlTemplate TargetType="GroupBox">
                             <Border CornerRadius="10"
-                                    BorderThickness="3"
+                                    BorderThickness="4"
                                     BorderBrush="#5A5A5A"
                                     Background="Transparent"
                                     Padding="10">
@@ -238,7 +238,7 @@
                     <GroupBox.Template>
                         <ControlTemplate TargetType="GroupBox">
                             <Border CornerRadius="10"
-                                    BorderThickness="3"
+                                    BorderThickness="4"
                                     BorderBrush="#5A5A5A"
                                     Background="Transparent"
                                     Padding="10">
@@ -323,7 +323,7 @@
                     <GroupBox.Template>
                         <ControlTemplate TargetType="GroupBox">
                             <Border CornerRadius="10"
-                                    BorderThickness="3"
+                                    BorderThickness="4"
                                     BorderBrush="#5A5A5A"
                                     Background="Transparent"
                                     Padding="10">
@@ -366,7 +366,7 @@
                     <GroupBox.Template>
                         <ControlTemplate TargetType="GroupBox">
                             <Border CornerRadius="10"
-                                    BorderThickness="3"
+                                    BorderThickness="4"
                                     BorderBrush="#5A5A5A"
                                     Background="Transparent"
                                     Padding="10">
