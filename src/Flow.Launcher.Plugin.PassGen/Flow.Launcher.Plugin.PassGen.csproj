@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0-windows</TargetFramework>
-    <AssemblyName>Flow.Launcher.Plugin.PassGen</AssemblyName>
-    <PackageId>Flow.Launcher.Plugin.PassGen</PackageId>
-    <Authors>HOK405</Authors>
-    <PackageProjectUrl>https://github.com/HOK405/Flow.Launcher.Plugin.PassGen</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/HOK405/Flow.Launcher.Plugin.PassGen</RepositoryUrl>
+    <AssemblyName>flowgen</AssemblyName>
+    <PackageId>flowgen</PackageId>
+    <Authors>vah</Authors>
+    <PackageProjectUrl>https://github.com/vahrina/flowgen.git</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/vahrina/flowgen.git</RepositoryUrl>
     <PackageTags>flow-launcher flow-plugin</PackageTags>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
