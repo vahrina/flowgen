@@ -20,17 +20,17 @@ jobs:
 
       - name: publish
         shell: pwsh
-        run: dotnet publish .\src\Flow.Launcher.Plugin.PassGen\Flow.Launcher.Plugin.PassGen.csproj -c Release -o .\publish
+        run: dotnet publish .\src\flowgen\flowgen.csproj -c Release -o .\publish
 
       - name: zip
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Path .\package\Flow.Launcher.Plugin.PassGen -Force | Out-Null
-          Copy-Item .\publish\* .\package\Flow.Launcher.Plugin.PassGen\ -Recurse -Force
-          Compress-Archive -Path .\package\Flow.Launcher.Plugin.PassGen -DestinationPath .\Flow.Launcher.Plugin.PassGen.zip -Force
+          New-Item -ItemType Directory -Path .\package\flowgen -Force | Out-Null
+          Copy-Item .\publish\* .\package\flowgen\ -Recurse -Force
+          Compress-Archive -Path .\package\flowgen -DestinationPath .\flowgen.zip -Force
 
 
       - name: release
         uses: softprops/action-gh-release@v2
         with:
-          files: Flow.Launcher.Plugin.PassGen.zip
+          files: flowgen.zip

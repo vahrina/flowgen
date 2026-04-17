@@ -1,6 +1,7 @@
 ﻿using Flow.Launcher.Plugin.PassGen.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -9,14 +10,11 @@ namespace Flow.Launcher.Plugin.PassGen;
 
 public partial class SettingsView : UserControl
 {
-    private const double TwoColumnsMaxWidth = 1140;
     private const int MinLen = 4;
     private const int MaxLen = 100;
 
     private readonly PluginInitContext _context;
     private readonly Settings _settings;
-
-    private bool _twoColumns;
 
     public SettingsView(PluginInitContext context, Settings settings)
     {
@@ -27,53 +25,10 @@ public partial class SettingsView : UserControl
 
         LoadToUI();
         WireEvents();
-        UpdateLengthPanels();
+        UpdateToggleAllButton();
 
-        Loaded += (_, __) =>
-        {
-            ApplyResponsiveLayout();
-            ApplySymbolsGridColumns();
-        };
-
-        SizeChanged += (_, __) =>
-        {
-            ApplyResponsiveLayout();
-            ApplySymbolsGridColumns();
-        };
-    }
-
-    private void ApplyResponsiveLayout()
-    {
-        var w = ActualWidth;
-        if (double.IsNaN(w) || w <= 0) return;
-
-        var wantTwo = w <= TwoColumnsMaxWidth;
-        if (wantTwo == _twoColumns) return;
-
-        _twoColumns = wantTwo;
-
-        if (_twoColumns)
-        {
-            Col2.Width = new GridLength(0);
-            ColCPanel.Visibility = Visibility.Collapsed;
-
-            if (EnterActionGroup.Parent is Panel p1) p1.Children.Remove(EnterActionGroup);
-
-            ColBExtra.Children.Clear();
-            ColBExtra.Children.Add(EnterActionGroup);
-        }
-        else
-        {
-            Col2.Width = new GridLength(1, GridUnitType.Star);
-            ColCPanel.Visibility = Visibility.Visible;
-
-            if (EnterActionGroup.Parent is Panel p1) p1.Children.Remove(EnterActionGroup);
-
-            ColCPanel.Children.Clear();
-            ColCPanel.Children.Add(EnterActionGroup);
-
-            ColBExtra.Children.Clear();
-        }
+        Loaded += (_, __) => ApplySymbolsGridColumns();
+        SizeChanged += (_, __) => ApplySymbolsGridColumns();
     }
 
     private void ApplySymbolsGridColumns()
@@ -92,11 +47,19 @@ public partial class SettingsView : UserControl
             SymbolsGrid.Columns = cols;
     }
 
-    private void UpdateLengthPanels()
+    private void UpdateLenModeToggle()
     {
-        var isRandom = LenRandomRadio.IsChecked == true;
+        var isRandom = _settings.LengthMode == PasswordLengthMode.Random;
+        LenModeToggleBtn.Content = isRandom ? "random" : "fixed";
         FixedLengthPanel.Visibility = isRandom ? Visibility.Collapsed : Visibility.Visible;
         RandomLengthPanel.Visibility = isRandom ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void UpdateToggleAllButton()
+    {
+        var all = AllSymbolBoxes();
+        var allChecked = all.All(b => b.IsChecked == true);
+        SymbolsToggleAllBtn.Content = allChecked ? "clear all" : "select all";
     }
 
     private IReadOnlyList<CheckBox> AllSymbolBoxes() => new[]
@@ -122,8 +85,14 @@ public partial class SettingsView : UserControl
 
     private void WireEvents()
     {
-        LenFixedRadio.Click += (_, __) => { UpdateLengthPanels(); Save(); };
-        LenRandomRadio.Click += (_, __) => { UpdateLengthPanels(); Save(); };
+        LenModeToggleBtn.Click += (_, __) =>
+        {
+            _settings.LengthMode = _settings.LengthMode == PasswordLengthMode.Random
+                ? PasswordLengthMode.Fixed
+                : PasswordLengthMode.Random;
+            UpdateLenModeToggle();
+            Save();
+        };
 
         DefaultLengthBox.LostFocus += (_, __) => Save();
         DefaultLengthBox.KeyDown += (_, e) =>
@@ -158,25 +127,25 @@ public partial class SettingsView : UserControl
 
         IncludeDigitsBox.Click += (_, __) => Save();
 
-        ActionCopyRadio.Click += (_, __) => Save();
-        ActionCopyPasteRadio.Click += (_, __) => Save();
-
         LowerOnlyRadio.Click += (_, __) => Save();
         UpperOnlyRadio.Click += (_, __) => Save();
         BothRadio.Click += (_, __) => Save();
 
         foreach (var b in AllSymbolBoxes())
-            b.Click += (_, __) => Save();
-
-        SymbolsSelectAllBtn.Click += (_, __) =>
         {
-            SetSymbols(AllSymbolBoxes(), true);
-            Save();
-        };
+            b.Click += (_, __) =>
+            {
+                UpdateToggleAllButton();
+                Save();
+            };
+        }
 
-        SymbolsClearAllBtn.Click += (_, __) =>
+        SymbolsToggleAllBtn.Click += (_, __) =>
         {
-            SetSymbols(AllSymbolBoxes(), false);
+            var all = AllSymbolBoxes();
+            var allChecked = all.All(b => b.IsChecked == true);
+            SetSymbols(all, !allChecked);
+            UpdateToggleAllButton();
             Save();
         };
 
@@ -184,23 +153,18 @@ public partial class SettingsView : UserControl
         {
             SetSymbols(AllSymbolBoxes(), false);
             SetSymbols(RecommendedSymbolBoxes(), true);
+            UpdateToggleAllButton();
             Save();
         };
     }
 
     private void LoadToUI()
     {
-        LenFixedRadio.IsChecked = _settings.LengthMode != PasswordLengthMode.Random;
-        LenRandomRadio.IsChecked = _settings.LengthMode == PasswordLengthMode.Random;
-
         DefaultLengthBox.Text = Math.Clamp(_settings.DefaultLength, MinLen, MaxLen).ToString();
         MinLengthBox.Text = Math.Clamp(_settings.RandomMinLength, MinLen, MaxLen).ToString();
         MaxLengthBox.Text = Math.Clamp(_settings.RandomMaxLength, MinLen, MaxLen).ToString();
 
         IncludeDigitsBox.IsChecked = _settings.IncludeDigits;
-
-        ActionCopyRadio.IsChecked = _settings.EnterActionMode != EnterActionMode.CopyAndPaste;
-        ActionCopyPasteRadio.IsChecked = _settings.EnterActionMode == EnterActionMode.CopyAndPaste;
 
         LowerOnlyRadio.IsChecked = _settings.LetterMode == LetterMode.LowerOnly;
         UpperOnlyRadio.IsChecked = _settings.LetterMode == LetterMode.UpperOnly;
@@ -243,12 +207,12 @@ public partial class SettingsView : UserControl
         SymGreaterThan.IsChecked = _settings.SymGreaterThan;
         SymApostrophe.IsChecked = _settings.SymApostrophe;
         SymQuote.IsChecked = _settings.SymQuote;
+
+        UpdateLenModeToggle();
     }
 
     private void Save()
     {
-        _settings.LengthMode = LenRandomRadio.IsChecked == true ? PasswordLengthMode.Random : PasswordLengthMode.Fixed;
-
         _settings.DefaultLength = ClampText(DefaultLengthBox.Text, MinLen, MaxLen, _settings.DefaultLength);
         DefaultLengthBox.Text = _settings.DefaultLength.ToString();
 
@@ -264,11 +228,6 @@ public partial class SettingsView : UserControl
         MaxLengthBox.Text = _settings.RandomMaxLength.ToString();
 
         _settings.IncludeDigits = IncludeDigitsBox.IsChecked == true;
-
-        _settings.EnterActionMode =
-            ActionCopyPasteRadio.IsChecked == true
-                ? EnterActionMode.CopyAndPaste
-                : EnterActionMode.Copy;
 
         _settings.LetterMode =
             LowerOnlyRadio.IsChecked == true ? LetterMode.LowerOnly :

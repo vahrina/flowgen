@@ -5,8 +5,8 @@
     <AssemblyName>flowgen</AssemblyName>
     <PackageId>flowgen</PackageId>
     <Authors>vah</Authors>
-    <PackageProjectUrl>https://github.com/vahrina/flowgen.git</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/vahrina/flowgen.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/vahrina/flowgen</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/vahrina/flowgen</RepositoryUrl>
     <PackageTags>flow-launcher flow-plugin</PackageTags>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>

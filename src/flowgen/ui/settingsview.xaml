@@ -78,18 +78,18 @@
                    Margin="18,0,0,8"
                    Foreground="#888"/>
 
-        <Grid x:Name="LayoutGrid" Grid.Row="1" ClipToBounds="True">
+        <Grid Grid.Row="1" ClipToBounds="True">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="Col0" Width="1.7*"/>
-                <ColumnDefinition x:Name="Col1" Width="1.15*"/>
-                <ColumnDefinition x:Name="Col2" Width="1.15*"/>
+                <ColumnDefinition Width="1.7*"/>
+                <ColumnDefinition Width="1.15*"/>
             </Grid.ColumnDefinitions>
 
-            <StackPanel x:Name="ColA" Grid.Column="0" Margin="6,0,6,0" VerticalAlignment="Top" HorizontalAlignment="Stretch" ClipToBounds="True">
+            <!-- Symbol -->
+            <StackPanel Grid.Column="0" Margin="6,0,6,0" VerticalAlignment="Top" HorizontalAlignment="Stretch" ClipToBounds="True">
                 <GroupBox x:Name="SymbolsGroup"
-                          Header="Symbols"
+                          Header="symbol"
                           HeaderTemplate="{StaticResource GroupHeaderTemplate}"
-                          Tag="Choose which symbols can be used in generated passwords. Use the buttons to quickly toggle sets."
+                          Tag="pick which symbols will be used in the generated output"
                           Margin="0,0,0,6"
                           HorizontalAlignment="Stretch">
                     <GroupBox.Template>
@@ -125,26 +125,10 @@
                                     Padding="14,8"
                                     Margin="0,0,14,8">
                                 <DockPanel LastChildFill="False" VerticalAlignment="Center">
-                                    <Button x:Name="SymbolsRecommendedBtn" Content="Recommended" Width="120"/>
+                                    <Button x:Name="SymbolsRecommendedBtn" Content="recommended" Width="120"/>
                                     <Button Style="{StaticResource InfoButtonStyle}"
                                             Content="i"
-                                            ToolTip="Select a curated set of symbols that is usually accepted by most services."
-                                            ToolTipService.InitialShowDelay="0"
-                                            ToolTipService.ShowDuration="60000"/>
-                                </DockPanel>
-                            </Border>
-
-                            <Border CornerRadius="8"
-                                    BorderThickness="2"
-                                    BorderBrush="#5A5A5A"
-                                    Background="Transparent"
-                                    Padding="14,8"
-                                    Margin="0,0,14,8">
-                                <DockPanel LastChildFill="False" VerticalAlignment="Center">
-                                    <Button x:Name="SymbolsSelectAllBtn" Content="Select all" Width="120"/>
-                                    <Button Style="{StaticResource InfoButtonStyle}"
-                                            Content="i"
-                                            ToolTip="Enable all symbols in the list."
+                                            ToolTip="select a curated set of symbols that is usually accepted by most services"
                                             ToolTipService.InitialShowDelay="0"
                                             ToolTipService.ShowDuration="60000"/>
                                 </DockPanel>
@@ -157,10 +141,10 @@
                                     Padding="14,8"
                                     Margin="0,0,0,8">
                                 <DockPanel LastChildFill="False" VerticalAlignment="Center">
-                                    <Button x:Name="SymbolsClearAllBtn" Content="Clear all" Width="120"/>
+                                    <Button x:Name="SymbolsToggleAllBtn" Content="select all" Width="120"/>
                                     <Button Style="{StaticResource InfoButtonStyle}"
                                             Content="i"
-                                            ToolTip="Disable all symbols in the list."
+                                            ToolTip="toggle between selecting &amp; clearing all symbols"
                                             ToolTipService.InitialShowDelay="0"
                                             ToolTipService.ShowDuration="60000"/>
                                 </DockPanel>
@@ -229,95 +213,11 @@
                 </GroupBox>
             </StackPanel>
 
-            <StackPanel x:Name="ColB" Grid.Column="1" Margin="8,0,6,0" VerticalAlignment="Top" HorizontalAlignment="Stretch" ClipToBounds="True">
-                <GroupBox Header="General"
+            <!-- configuration parameters -->
+            <StackPanel Grid.Column="1" Margin="8,0,6,0" VerticalAlignment="Top" HorizontalAlignment="Stretch" ClipToBounds="True">
+                <GroupBox Header="configuration"
                           HeaderTemplate="{StaticResource GroupHeaderTemplate}"
-                          Tag="Controls password length and digits. Fixed uses one length. Random picks a new length on each generation between Min and Max. Allowed range is 4-100."
-                          Margin="0,0,0,14"
-                          HorizontalAlignment="Stretch">
-                    <GroupBox.Template>
-                        <ControlTemplate TargetType="GroupBox">
-                            <Border CornerRadius="10"
-                                    BorderThickness="4"
-                                    BorderBrush="#5A5A5A"
-                                    Background="Transparent"
-                                    Padding="10">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
-
-                                    <ContentPresenter Grid.Row="0"
-                                                      ContentSource="Header"
-                                                      Margin="0,0,0,8"/>
-
-                                    <ContentPresenter Grid.Row="1"
-                                                      ContentSource="Content"/>
-                                </Grid>
-                            </Border>
-                        </ControlTemplate>
-                    </GroupBox.Template>
-
-                    <StackPanel Margin="10">
-                        <TextBlock Text="Length mode" Margin="0,0,0,6"/>
-
-                        <WrapPanel Margin="0,0,0,10">
-                            <Border CornerRadius="8"
-                                    BorderThickness="2"
-                                    BorderBrush="#5A5A5A"
-                                    Background="Transparent"
-                                    Padding="14,8"
-                                    Margin="0,0,14,8">
-                                <RadioButton x:Name="LenFixedRadio"
-                                             GroupName="LengthMode"
-                                             Content="Fixed"
-                                             VerticalAlignment="Center"/>
-                            </Border>
-
-                            <Border CornerRadius="8"
-                                    BorderThickness="2"
-                                    BorderBrush="#5A5A5A"
-                                    Background="Transparent"
-                                    Padding="14,8"
-                                    Margin="0,0,0,8">
-                                <RadioButton x:Name="LenRandomRadio"
-                                             GroupName="LengthMode"
-                                             Content="Random"
-                                             VerticalAlignment="Center"/>
-                            </Border>
-                        </WrapPanel>
-
-                        <StackPanel x:Name="FixedLengthPanel" Margin="0,0,0,10">
-                            <WrapPanel>
-                                <DockPanel LastChildFill="False" Margin="0,0,0,8">
-                                    <TextBlock VerticalAlignment="Center" Text="Length (4-100):" Margin="0,0,8,0"/>
-                                    <TextBox x:Name="DefaultLengthBox" Width="72" HorizontalAlignment="Left"/>
-                                </DockPanel>
-                            </WrapPanel>
-                        </StackPanel>
-
-                        <StackPanel x:Name="RandomLengthPanel" Margin="0,0,0,10">
-                            <WrapPanel>
-                                <DockPanel LastChildFill="False" Margin="0,0,14,8">
-                                    <TextBlock VerticalAlignment="Center" Text="Min (4-100):" Margin="0,0,8,0"/>
-                                    <TextBox x:Name="MinLengthBox" Width="72" HorizontalAlignment="Left"/>
-                                </DockPanel>
-
-                                <DockPanel LastChildFill="False" Margin="0,0,0,8">
-                                    <TextBlock VerticalAlignment="Center" Text="Max (4-100):" Margin="0,0,8,0"/>
-                                    <TextBox x:Name="MaxLengthBox" Width="72" HorizontalAlignment="Left"/>
-                                </DockPanel>
-                            </WrapPanel>
-                        </StackPanel>
-
-                        <CheckBox x:Name="IncludeDigitsBox" Content="Include digits (0-9)"/>
-                    </StackPanel>
-                </GroupBox>
-
-                <GroupBox Header="Letters"
-                          HeaderTemplate="{StaticResource GroupHeaderTemplate}"
-                          Tag="Controls which letter cases are allowed in generated passwords."
+                          Tag="configure the length, digits &amp; letter case of the generated output"
                           Margin="0,0,0,6"
                           HorizontalAlignment="Stretch">
                     <GroupBox.Template>
@@ -345,51 +245,38 @@
                     </GroupBox.Template>
 
                     <StackPanel Margin="10">
+                        <!-- length toggle + length inputs inline -->
+                        <DockPanel Margin="0,0,0,10">
+                            <Border CornerRadius="8"
+                                    BorderThickness="2"
+                                    BorderBrush="#5A5A5A"
+                                    Background="Transparent"
+                                    Padding="14,8"
+                                    Margin="0,0,14,0"
+                                    DockPanel.Dock="Left">
+                                <Button x:Name="LenModeToggleBtn" Content="fixed" Width="80"/>
+                            </Border>
+
+                            <StackPanel x:Name="FixedLengthPanel" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock VerticalAlignment="Center" Text="length (4-100):" Margin="0,0,8,0"/>
+                                <TextBox x:Name="DefaultLengthBox" Width="72"/>
+                            </StackPanel>
+
+                            <StackPanel x:Name="RandomLengthPanel" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock VerticalAlignment="Center" Text="min (4-100):" Margin="0,0,8,0"/>
+                                <TextBox x:Name="MinLengthBox" Width="52" Margin="0,0,14,0"/>
+                                <TextBlock VerticalAlignment="Center" Text="max (4-100):" Margin="0,0,8,0"/>
+                                <TextBox x:Name="MaxLengthBox" Width="52"/>
+                            </StackPanel>
+                        </DockPanel>
+
+                        <CheckBox x:Name="IncludeDigitsBox" Content="include digits (0-9)" Margin="0,0,0,10"/>
+
                         <StackPanel>
-                            <RadioButton x:Name="LowerOnlyRadio" Content="Only lower-case (a-z)" GroupName="LetterMode"/>
-                            <RadioButton x:Name="UpperOnlyRadio" Content="Only UPPER-case (A-Z)" GroupName="LetterMode"/>
-                            <RadioButton x:Name="BothRadio" Content="Lower and UPPER (a-z + A-Z)" GroupName="LetterMode"/>
+                            <RadioButton x:Name="LowerOnlyRadio" Content="only lower case (a-z)" GroupName="LetterMode" Margin="0,0,0,4"/>
+                            <RadioButton x:Name="UpperOnlyRadio" Content="only upper case (A-Z)" GroupName="LetterMode" Margin="0,0,0,4"/>
+                            <RadioButton x:Name="BothRadio" Content="lower &amp; upper (a-zA-Z)" GroupName="LetterMode"/>
                         </StackPanel>
-                    </StackPanel>
-                </GroupBox>
-
-                <StackPanel x:Name="ColBExtra"/>
-            </StackPanel>
-
-            <StackPanel x:Name="ColCPanel" Grid.Column="2" Margin="6,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch" ClipToBounds="True">
-                <GroupBox x:Name="EnterActionGroup"
-                          Header="Enter action"
-                          HeaderTemplate="{StaticResource GroupHeaderTemplate}"
-                          Tag="Choose what happens when you press Enter: Copy will copy the result. Copy and Paste will copy it and then paste using Ctrl+V."
-                          Margin="0,0,0,6"
-                          HorizontalAlignment="Stretch">
-                    <GroupBox.Template>
-                        <ControlTemplate TargetType="GroupBox">
-                            <Border CornerRadius="10"
-                                    BorderThickness="4"
-                                    BorderBrush="#5A5A5A"
-                                    Background="Transparent"
-                                    Padding="10">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
-
-                                    <ContentPresenter Grid.Row="0"
-                                                      ContentSource="Header"
-                                                      Margin="0,0,0,8"/>
-
-                                    <ContentPresenter Grid.Row="1"
-                                                      ContentSource="Content"/>
-                                </Grid>
-                            </Border>
-                        </ControlTemplate>
-                    </GroupBox.Template>
-
-                    <StackPanel Margin="10">
-                        <RadioButton x:Name="ActionCopyRadio" Content="Copy" GroupName="EnterAction" Margin="0,0,0,6"/>
-                        <RadioButton x:Name="ActionCopyPasteRadio" Content="Copy and Paste" GroupName="EnterAction"/>
                     </StackPanel>
                 </GroupBox>
             </StackPanel>

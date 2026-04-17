@@ -6,7 +6,7 @@
     "Author": "vah",
     "Version": "0.1",
     "Language": "csharp",
-    "Website": "https://github.com/vahrina/flowgen.git",
+    "Website": "https://github.com/vahrina/flowgen",
     "IcoPath": "icon.png",
     "ExecuteFileName": "flowgen.dll"
 }

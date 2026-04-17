@@ -13,8 +13,6 @@ public class Settings
     public bool IncludeDigits { get; set; } = true;
     public LetterMode LetterMode { get; set; } = LetterMode.LowerAndUpper;
 
-    public EnterActionMode EnterActionMode { get; set; } = EnterActionMode.CopyAndPaste;
-
     public bool SymExclam { get; set; } = true;
     public bool SymAt { get; set; } = true;
     public bool SymHash { get; set; } = true;

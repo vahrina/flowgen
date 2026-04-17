@@ -1,5 +1,4 @@
 ﻿using Flow.Launcher.Plugin.PassGen.Enums;
-using Flow.Launcher.Plugin.PassGen.Input;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -9,7 +8,6 @@ namespace Flow.Launcher.Plugin.PassGen;
 
 public class Main : IPlugin, ISettingProvider
 {
-    private const int PasteInitialDelayMs = 220;
     private const int MinLen = 4;
     private const int MaxLen = 100;
     private const int MaxResultCount = 8;
@@ -123,11 +121,11 @@ public class Main : IPlugin, ISettingProvider
                 new Result
                 {
                     Title = password,
-                    SubTitle = $"{BuildEnterSubtitle()} password ({length} chars)",
+                    SubTitle = $"enter to copy ({length} chars)",
                     IcoPath = "icon.png",
                     Action = _ =>
                     {
-                        ExecuteEnterAction(password);
+                        _context.API.CopyToClipboard(password);
                         return true;
                     }
                 }
@@ -145,11 +143,11 @@ public class Main : IPlugin, ISettingProvider
             results.Add(new Result
             {
                 Title = password,
-                SubTitle = $"copy password {i}/{safeCount} ({length} chars)",
+                SubTitle = $"enter to copy {i}/{safeCount} ({length} chars)",
                 IcoPath = "icon.png",
                 Action = _ =>
                 {
-                    ExecuteEnterAction(password);
+                    _context.API.CopyToClipboard(password);
                     return true;
                 }
             });
@@ -203,7 +201,6 @@ public class Main : IPlugin, ISettingProvider
             RandomMaxLength = _settings.RandomMaxLength,
             IncludeDigits = _settings.IncludeDigits,
             LetterMode = _settings.LetterMode,
-            EnterActionMode = _settings.EnterActionMode,
             SymExclam = _settings.SymExclam,
             SymAt = _settings.SymAt,
             SymHash = _settings.SymHash,
@@ -437,27 +434,5 @@ public class Main : IPlugin, ISettingProvider
         }
 
         return new string(chars.ToArray());
-    }
-
-    private string BuildEnterSubtitle()
-    {
-        return _settings.EnterActionMode == EnterActionMode.CopyAndPaste
-            ? "copy & paste"
-            : "copy";
-    }
-
-    private void ExecuteEnterAction(string text)
-    {
-        if (_settings.EnterActionMode != EnterActionMode.CopyAndPaste)
-        {
-            _context.API.CopyToClipboard(text);
-            return;
-        }
-
-        var blocked = PasteHelper.GetForegroundWindowHandle();
-
-        _context.API.CopyToClipboard(text);
-        _context.API.HideMainWindow();
-        PasteHelper.PasteFromClipboard(PasteInitialDelayMs, blocked);
     }
 }
